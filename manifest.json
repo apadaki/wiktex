@@ -1,0 +1,6 @@
+{
+    "name": "WikTex",
+    "version": "1.0",
+    "description": "get source LaTeX from Wikipedia equations",
+    "manifest_version": 3
+}
