@@ -1,8 +1,12 @@
-popup_latex = function(latex_str) {
+popup = async function(latex_str) {
     alert(latex_str)
 }
 
 grab_latex = async function(data) {
+    let [tab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
+    })
     src_url = data.srcUrl
     console.log(src_url.startsWith('https://wikimedia.org/api/rest_v1/media/math/render/svg'))
     if (src_url.startsWith('https://wikimedia.org/api/rest_v1/media/math/render/svg')) {
@@ -14,21 +18,28 @@ grab_latex = async function(data) {
             let startIndex = html.indexOf(start) + start.length
             let endIndex = html.indexOf(end)
             latex_string = html.substring(startIndex, endIndex)
-            let [tab] = await chrome.tabs.query({
-                active: true,
-                currentWindow: true
-            })
 
-            console.log(tab)
             chrome.scripting.executeScript({
                 target: {tabId: tab.id},
-                func: popup_latex,
+                func: popup,
                 args: [latex_string],
             });
             
 
         }).catch(function (err) {
-            console.warn('invalid Wikimedia link', err);
+            console.warn('Invalid Wikimedia link', err);
+            chrome.scripting.executeScript({
+                target: {tabId: tab.id},
+                func: popup,
+                args: ['Invalid Wikimedia link'],
+            });
+        });
+    }
+    else {
+        chrome.scripting.executeScript({
+            target: {tabId: tab.id},
+            func: popup,
+            args: ['Invalid Wikimedia link'],
         });
     }
 }

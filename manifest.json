@@ -3,6 +3,9 @@
     "version": "1.0",
     "description": "get source LaTeX from Wikipedia equations",
     "permissions": ["contextMenus", "tabs", "scripting"],
+    "host_permissions": [
+        "*://*/*"
+      ],      
     "background": {
         "service_worker": "background.js"
     },
